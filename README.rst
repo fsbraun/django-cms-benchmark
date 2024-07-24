@@ -9,7 +9,9 @@ A dockerised django CMS project to benchmark performance for large installations
 This project is based on the `django CMS quickstart <https://github.com/django-cms/django-cms-quickstart>`_ and
 add a benchmark app.
 
-Benchmarks are run on the existing database by typing::
+Benchmarks are run on the existing database by typing:
+
+.. code-block:: bash:
 
     docker compose run web python manage.py test
 
@@ -54,7 +56,72 @@ and start the server again:
   docker compose up -d
 
 Creating pages
-==============
+##############
 
 The management command ``./manage.py create_pages`` creates an (empty) page tree of well-nested 19166 pages.
 Run repeatedly to create more pages.
+
+Example results
+###############
+
+.. code-block:: bash
+
+    Found 4 test(s).
+    System check identified no issues (0 silenced).
+    Total pages: 57498
+    ------------------
+    .Show menu (nodes are cached).
+    ------------------------------
+    Total process time: 351ms
+    Calls cut_levels:   6
+    Queries:            1
+    Generated menu size:8kB
+
+    .Show page preview including menu.
+    ----------------------------------
+    Total time:         2273ms
+    Calls cut_levels:   6
+    Queries:            21
+
+    .Build nodes.
+    -------------
+    Total nodes:        57498
+    Total queries:      8
+    Total process time: 1891ms
+    Total time (cache): 38.11
+
+    .
+    ----------------------------------------------------------------------
+    Ran 4 tests in 8.473s
+
+    OK
+    django-cms-benchmark % docker compose run web python manage.py test benchmark.tests
+    Found 4 test(s).
+    System check identified no issues (0 silenced).
+    Total pages: 57498
+    ------------------
+    .Build nodes.
+    -------------
+    Total nodes:        57498
+    Total queries:      10
+    Total process time: 1716ms
+    Total time (cache): 45.53
+
+    .Show menu (nodes are cached).
+    ------------------------------
+    Total process time: 388ms
+    Calls cut_levels:   6
+    Queries:            1
+    Generated menu size:8kB
+
+    .Show page preview including menu.
+    ----------------------------------
+    Total time:         2293ms
+    Calls cut_levels:   6
+    Queries:            21
+
+    .
+    ----------------------------------------------------------------------
+    Ran 4 tests in 8.661s
+
+    OK
