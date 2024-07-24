@@ -15,13 +15,13 @@ from django.template import Template, Context
 
 class MenuPerfTestCase(CMSTestCase):
 
-    def test_0_num_pages(self):
+    def test_00_num_pages(self):
         from cms.models import Page
 
         print(f"Total pages: {Page.objects.count()}")
         print("------------------")
 
-    def test_get_nodes(self):
+    def test_10_get_nodes(self):
         print("Build nodes.")
         print("-------------")
         from cms.models import Page
@@ -50,7 +50,7 @@ class MenuPerfTestCase(CMSTestCase):
             last_query = len(connection.queries)
             print(f"Total nodes:        {len(nodes)}")
             print(f"Total queries:      {last_query - first_query}")
-            print(f"Total time:         {(end_time - start_time)*1000:.0f}ms")
+            print(f"Total process time: {(end_time - start_time)*1000:.0f}ms")
             with self.assertNumQueries(0):
                 start_time = time.process_time()
                 renderer.get_nodes()
@@ -59,7 +59,7 @@ class MenuPerfTestCase(CMSTestCase):
             # pprint(connection.queries[first_query:last_query], width=180)
         print()
 
-    def test_show_menu(self):
+    def test_20_show_menu(self):
         print("Show menu (nodes are cached).")
         print("------------------------------")
 
@@ -87,14 +87,14 @@ class MenuPerfTestCase(CMSTestCase):
             with patch("menus.templatetags.menu_tags.cut_after") as cut_levels:
                 result = t.render(c)
         end_time = time.process_time()
-        print(f"Total time:         {(end_time - start_time)*1000:.0f}ms")
+        print(f"Total process time: {(end_time - start_time)*1000:.0f}ms")
         print(f"Calls cut_levels:   {cut_levels.call_count}")
         print(f"Queries:            {len(context.captured_queries)}")
         print(f"Generated menu size:{len(result)//1024}kB")
         print()
         # print(str(result)[:100])
 
-    def test_show_menu2(self):
+    def test_30_show_menu2(self):
         print("Show page preview including menu.")
         print("----------------------------------")
 
@@ -102,14 +102,13 @@ class MenuPerfTestCase(CMSTestCase):
             page_content = PageContent.admin_manager.filter(page__is_home=True).current_content().first()
             url = get_object_preview_url(page_content) if page_content else "/"
             request = self.get_request(url)
-            renderer = menu_pool.get_renderer(request)
-            renderer.get_nodes()  # Cache nodes
+
             first_query = len(connection.queries)
             with CaptureQueriesContext(connection) as context:
                 with patch("menus.templatetags.menu_tags.cut_after") as cut_levels:
-                    start_time = time.process_time()
+                    start_time = time.time()
                     result = self.client.get(url)
-                    end_time = time.process_time()
+                    end_time = time.time()
             last_query = len(connection.queries)
         print(f"Total time:         {(end_time - start_time)*1000:.0f}ms")
         print(f"Calls cut_levels:   {cut_levels.call_count}")
