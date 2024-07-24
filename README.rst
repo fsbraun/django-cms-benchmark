@@ -1,20 +1,18 @@
 |pythonapp|
 
-#####################
-django CMS quickstart
-#####################
+####################
+django CMS benchmark
+####################
 
-A dockerised django CMS project, ready to deploy on `Divio <https://www.divio.com/>`_ or another Docker-based cloud
-platform, and run locally in Docker on your own machine.
+A dockerised django CMS project to benchmark performance for large installations.
 
-This version uses Python 3.11 and the most up-to-date versions of Django 4.2, and django CMS 4.1.0
+This project is based on the `django CMS quickstart <https://github.com/django-cms/django-cms-quickstart>`_ and
+add a benchmark app.
 
-This project is endorsed by the `django CMS Association <https://www.django-cms.org/en/about-us/>`_. That means that it
-is officially accepted by the dCA as being in line with our roadmap vision and development/plugin policy. Join us on
-`Slack <https://www.django-cms.org/slack/>`_ for more information or questions.
+Benchmarks are run on the existing database by typing::
 
-The documentation for version 4.1 is still work in progress and - for the time being - can be found here:
-https://django-cms-docs.readthedocs.io/en/latest/
+    docker compose run web python manage.py test
+
 
 Installation
 ############
@@ -55,84 +53,8 @@ and start the server again:
   docker compose build web
   docker compose up -d
 
+Creating pages
+==============
 
-Note: Since Compose V2, ``docker-compose`` is now included inside docker. For more information, checkout the
-`Compose V2 <https://docs.docker.com/compose/cli-command/>`_ Documentation.
-
-.. inclusion-end-marker-do-not-remove
-
-Customising the project
-#######################
-
-This project is ready-to-go without making any changes at all, but also gives you some options.
-
-As-is, it will include a number of useful django CMS plugins and Bootstrap 4 for the frontend. You don't have to use
-these; they're optional. If you don't want to use them, read through the ``settings.py`` and ``requirements.txt`` files
-to see sections that can be removed - in each case, the section is noted with a comment containing the word 'optional'.
-
-Options are also available for using Postgres/MySQL, uWSGI/Gunicorn/Guvicorn, etc.
-
-Updating requirements
-=====================
-
-The project uses a 2 step approach, freezing all dependencies with pip-tools. Read more about how to handle it here:
-https://blog.typodrive.com/2020/02/04/always-freeze-requirements-with-pip-compile-to-avoid-unpleasant-surprises/
-
-Features
-########
-
-Static Files with Whitenoise
-============================
-
-This quickstart demo has a cloud-ready static files setup via django-whitenoise.
-
-In the containerized cloud the application is not served by a web server like nginx but directly through uwsgi.
-django-whitenoise is the glue that's needed to serve static files in your application directly through uwsgi.
-
-See the django-whitenoise settings in settings.py and the ``quickstart/templates/whitenoise-static-files-demo.html``
-demo page template that serves a static file.
-
-Contribution
-############
-
-Here is the official django CMS repository:
-`https://github.com/django-cms/django-cms-quickstart/ <https://github.com/django-cms/django-cms-quickstart/>`_.
-
-
-Deployment
-##########
-
-Note that this is just a demo project to get you started. If you want a full production ready site with all the bells
-and whistles we recommend you have a look at https://github.com/django-cms/djangocms-template instead.
-
-Env variables
-=============
-
-- to deploy this project in testing mode (recommended) set the environment variable ``DEBUG`` to ``True`` in your
-  hosting environment.
-- For production environment (if ``DEBUG`` is false) django requires you to whitelist the domain. Set the env var
-  ``DOMAIN`` to the host, i.e. ``www.domain.com`` or ``*.domain.com``.
-- If you want the media hosted on S3 set the ``DEFAULT_FILE_STORAGE`` variable accordingly.
-- If you want to access the PostgreSQL database from the host system, set ``DB_PORT`` to the desired port number.
-  5432 is the standard port number. If you run PosgreSQL on your host system, you may want to set another port number.
-  If this variable is empty (the default), the PosgreSQL instance in the container is only reachable within docker, but
-  not from outside.
-
-
-Deployment Commands
-===================
-
-Configure your hosting environment to run the following commands on every deployment:
-
-- ``./manage.py migrate``
-
-
-Divio Deployment
-================
-
-divio.com is a cloud hosting platform optimized for django web applications. It's the quickest way to deploy this
-project. Here is a `video tutorial <https://www.youtube.com/watch?v=O2g5Wfoyp7Q>`_ and a
-`description of the deployment steps <https://github.com/django-cms/djangocms-template/blob/mco-standalone/docs/deployment-divio.md#divio-project-setup>`_ that are mostly applicable for this quickstart project.
-
-
-.. |pythonapp| image:: https://github.com/django-cms/django-cms-quickstart/workflows/Python%20application/badge.svg?branch=support/cms-4.1.x
+The management command ``./manage.py create_pages`` creates an (empty) page tree of well-nested 19166 pages.
+Run repeatedly to create more pages.
