@@ -17,7 +17,7 @@ from django.template import Template, Context
 class MenuPerfTestCase(CMSTestCase):
     def setUp(self):
         if PageContent.admin_manager.current_content().first() is None:
-            create_page("Home", "bootstrap5.html", "en")
+            create_page("Home", "bootstrap5.html", "en", created_by=self.get_superuser())
 
     def test_00_num_pages(self):
         from cms.models import Page
