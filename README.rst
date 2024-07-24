@@ -125,3 +125,6 @@ Example results
     Ran 4 tests in 8.661s
 
     OK
+
+
+.. |pythonapp| image:: https://github.com/fsbraun/django-cms-benchmark/workflows/Python%20application/badge.svg
