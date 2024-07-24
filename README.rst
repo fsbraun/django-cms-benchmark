@@ -70,7 +70,14 @@ Example results
     System check identified no issues (0 silenced).
     Total pages: 57498
     ------------------
-    .Show menu (nodes are cached).
+     .Build nodes.
+    -------------
+    Total nodes:        57498
+    Total queries:      8
+    Total process time: 1891ms
+    Total time (cache): 38.11
+
+   .Show menu (nodes are cached).
     ------------------------------
     Total process time: 351ms
     Calls cut_levels:   6
@@ -82,13 +89,6 @@ Example results
     Total time:         2273ms
     Calls cut_levels:   6
     Queries:            21
-
-    .Build nodes.
-    -------------
-    Total nodes:        57498
-    Total queries:      8
-    Total process time: 1891ms
-    Total time (cache): 38.11
 
     .
     ----------------------------------------------------------------------
