@@ -18,7 +18,7 @@ djangocms-alias>=2.0.0
 # optional, but used in most projects
 djangocms-admin-style>=3.2.2
 
-djangocms-text
+djangocms-text-ckeditor
 
 # optional django CMS frontend
 djangocms-frontend

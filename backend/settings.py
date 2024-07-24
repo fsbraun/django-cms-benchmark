@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'parler',
 
     # the default CKEditor - optional, but used in most projects
-    'djangocms_text',
+    'djangocms_text_ckeditor',
 
     # optional django CMS frontend modules
     'djangocms_frontend',
@@ -78,6 +78,8 @@ INSTALLED_APPS = [
     'djangocms_frontend.contrib.image',
     'djangocms_frontend.contrib.tabs',
     'djangocms_frontend.contrib.utilities',
+
+    "benchmark",
 ]
 
 MIDDLEWARE = [
@@ -221,3 +223,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 CMS_CONFIRM_VERSION4 = True
 DJANGOCMS_VERSIONING_ALLOW_DELETING_VERSIONS = True
+
+TEST_RUNNER = "benchmark.testrunner.MyTestRunner"
