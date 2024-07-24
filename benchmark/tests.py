@@ -1,13 +1,14 @@
 import time
 from unittest.mock import patch
 
+from cms.api import create_page
 from django.db import connection
 from django.test.utils import CaptureQueriesContext
 
 from cms.models import PageContent
 from cms.test_utils.testcases import CMSTestCase
 from cms.toolbar.toolbar import CMSToolbar
-from cms.toolbar.utils import get_object_preview_url, get_toolbar_from_request
+from cms.toolbar.utils import get_object_preview_url
 from menus.menu_pool import menu_pool
 
 from django.template import Template, Context
@@ -16,8 +17,8 @@ from django.template import Template, Context
 class MenuPerfTestCase(CMSTestCase):
     def setUp(self):
         if PageContent.admin_manager.current_content().first() is None:
-            self.create_page("Home", "bootstrap5.html", "en")
-            
+            create_page("Home", "bootstrap5.html", "en")
+
     def test_00_num_pages(self):
         from cms.models import Page
 
@@ -27,7 +28,6 @@ class MenuPerfTestCase(CMSTestCase):
     def test_10_get_nodes(self):
         print("Build nodes.")
         print("-------------")
-        from cms.models import Page
 
         if not menu_pool.discovered:
             menu_pool.discover_menus()
@@ -36,7 +36,7 @@ class MenuPerfTestCase(CMSTestCase):
             menu_pool.modifiers.remove(AliasDisableMenu)
         menu_pool.clear(all=True)
 
-        with CaptureQueriesContext(connection) as context, self.login_user_context(self.get_superuser()):
+        with CaptureQueriesContext(connection), self.login_user_context(self.get_superuser()):
             ...  # do your thing
             first_query = len(connection.queries)
 
@@ -46,7 +46,6 @@ class MenuPerfTestCase(CMSTestCase):
 
             renderer = menu_pool.get_renderer(request)
             start_time = time.process_time()
-            import cProfile
             # cProfile.runctx('nodes = renderer.get_nodes()', globals(), locals())
             nodes = renderer.get_nodes()
             end_time = time.process_time()
@@ -104,13 +103,12 @@ class MenuPerfTestCase(CMSTestCase):
         with self.login_user_context(self.get_superuser()):
             page_content = page_content = PageContent.admin_manager.current_content().first()
             url = get_object_preview_url(page_content) if page_content else "/"
-            request = self.get_request(url)
 
             first_query = len(connection.queries)
-            with CaptureQueriesContext(connection) as context:
+            with CaptureQueriesContext(connection):
                 with patch("menus.templatetags.menu_tags.cut_after") as cut_levels:
                     start_time = time.time()
-                    result = self.client.get(url)
+                    self.client.get(url)
                     end_time = time.time()
             last_query = len(connection.queries)
         print(f"Total time:         {(end_time - start_time)*1000:.0f}ms")
