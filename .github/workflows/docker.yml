@@ -32,7 +32,7 @@ jobs:
           docker compose up database_default -d
           sleep 2s
           docker compose run web python manage.py migrate
-          docker compose run web python manage.py collect_static --noinput
+          docker compose run web python manage.py collectstatic --noinput
           docker compose up -d
 
       - name: 'debug: Display state and logs'
