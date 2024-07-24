@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'parler',
 
     # the default CKEditor - optional, but used in most projects
-    'djangocms_text_ckeditor',
+    'djangocms_text',
 
     # optional django CMS frontend modules
     'djangocms_frontend',
