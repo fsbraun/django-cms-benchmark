@@ -127,4 +127,4 @@ Example results
     OK
 
 
-.. |pythonapp| image:: https://github.com/fsbraun/django-cms-benchmark/workflows/Python%20application/badge.svg
+.. |pythonapp| image:: https://github.com/fsbraun/django-cms-benchmark/workflows/Docker%20test%20suite/badge.svg
