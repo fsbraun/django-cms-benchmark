@@ -40,7 +40,7 @@ Try it
   docker compose run web python manage.py createsuperuser
   docker compose up -d
 
-Then open http://django-cms-quickstart.127.0.0.1.nip.io:8000 (or just http://127.0.0.1:8000) in your browser.
+Then open http://127.0.0.1:8000 in your browser.
 
 You can stop the server with ``docker compose stop`` without destroying the containers and restart it with
 ``docker compose start``.
