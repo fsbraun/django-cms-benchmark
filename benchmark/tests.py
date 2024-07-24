@@ -14,7 +14,10 @@ from django.template import Template, Context
 
 
 class MenuPerfTestCase(CMSTestCase):
-
+    def setUp(self):
+        if PageContent.admin_manager.current_content().first() is None:
+            self.create_page("Home", "bootstrap5.html", "en")
+            
     def test_00_num_pages(self):
         from cms.models import Page
 
@@ -48,14 +51,14 @@ class MenuPerfTestCase(CMSTestCase):
             nodes = renderer.get_nodes()
             end_time = time.process_time()
             last_query = len(connection.queries)
-            print(f"Total nodes:        {len(nodes)}")
-            print(f"Total queries:      {last_query - first_query}")
-            print(f"Total process time: {(end_time - start_time)*1000:.0f}ms")
+            print(f"Total nodes:          {len(nodes)}")
+            print(f"Total queries:        {last_query - first_query}")
+            print(f"Total process time:   {(end_time - start_time)*1000:5.0f}ms")
             with self.assertNumQueries(0):
                 start_time = time.process_time()
                 renderer.get_nodes()
                 end_time = time.process_time()
-            print(f"Total time (cache): {(end_time - start_time)*100:.2f}")
+            print(f"Process time (cache): {(end_time - start_time)*1000:5.0f}ms")
             # pprint(connection.queries[first_query:last_query], width=180)
         print()
 
@@ -71,7 +74,7 @@ class MenuPerfTestCase(CMSTestCase):
         menu_pool.clear(all=True)
 
         with self.login_user_context(self.get_superuser()):
-            page_content = PageContent.admin_manager.first()
+            page_content = PageContent.admin_manager.current_content().first()
             url = get_object_preview_url(page_content)
             request = self.get_request(url)
             request.toolbar = CMSToolbar(request)
@@ -87,10 +90,10 @@ class MenuPerfTestCase(CMSTestCase):
             with patch("menus.templatetags.menu_tags.cut_after") as cut_levels:
                 result = t.render(c)
         end_time = time.process_time()
-        print(f"Total process time: {(end_time - start_time)*1000:.0f}ms")
-        print(f"Calls cut_levels:   {cut_levels.call_count}")
-        print(f"Queries:            {len(context.captured_queries)}")
-        print(f"Generated menu size:{len(result)//1024}kB")
+        print(f"Total process time:  {(end_time - start_time)*1000:.0f}ms")
+        print(f"Calls cut_levels:    {cut_levels.call_count}")
+        print(f"Queries:             {len(context.captured_queries)}")
+        print(f"Generated menu size: {len(result)//1024}kB")
         print()
         # print(str(result)[:100])
 
@@ -99,7 +102,7 @@ class MenuPerfTestCase(CMSTestCase):
         print("----------------------------------")
 
         with self.login_user_context(self.get_superuser()):
-            page_content = PageContent.admin_manager.filter(page__is_home=True).current_content().first()
+            page_content = page_content = PageContent.admin_manager.current_content().first()
             url = get_object_preview_url(page_content) if page_content else "/"
             request = self.get_request(url)
 
