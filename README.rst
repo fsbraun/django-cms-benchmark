@@ -75,7 +75,7 @@ Example results
     Total nodes:        57498
     Total queries:      8
     Total process time: 1891ms
-    Total time (cache): 38.11
+    Total time (cache):  381ms
 
    .Show menu (nodes are cached).
     ------------------------------
